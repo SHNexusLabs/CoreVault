@@ -1,0 +1,233 @@
+@import "tailwindcss";
+
+/*
+ * TechStore Design System
+ * -----------------------
+ * Global theme, colors, typography, and base styles.
+ */
+
+:root {
+  /* LIGHT MODE*/
+
+  --background: #ffffff;
+  --background-secondary: #f8fafc;
+  --surface: #f1f5f9;
+  --surface-hover: #e2e8f0;
+
+  /* Text */
+  --foreground: #0f172a;
+  --foreground-secondary: #475569;
+  --foreground-muted: #64748b;
+  --foreground-disabled: #94a3b8;
+
+  /* Borders */
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  /* Brand / primary */
+  --primary: #0f766e;
+  --primary-hover: #115e59;
+  --primary-active: #134e4a;
+  --primary-soft: #cbfbf1;
+  --primary-foreground: #ffffff;
+
+  /* Semantic colors */
+  --success: #16a34a;
+  --success-soft: #dcfce7;
+
+  --warning: #d97706;
+  --warning-soft: #fef3c7;
+
+  --error: #dc2626;
+  --error-soft: #fee2e2;
+
+  --info: #2563eb;
+  --info-soft: #dbeafe;
+
+  /* Commerce */
+  --discount: #ea580c;
+  --discount-soft: #ffedd5;
+
+  /* Focus */
+  --focus-ring: rgba(15, 118, 110, 0.35);
+
+  /* TYPOGRAPHY */
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* SHAPE */
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* SHADOWS */
+
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+
+  --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.1);
+}
+
+/* DARK MODE */
+
+.dark {
+  --background: #0f172a;
+  --background-secondary: #111827;
+  --surface: #1e293b;
+  --surface-hover: #334155;
+
+  /* Text */
+  --foreground: #f8fafc;
+  --foreground-secondary: #cbd5e1;
+  --foreground-muted: #94a3b8;
+  --foreground-disabled: #64748b;
+
+  /* Borders */
+  --border: #334155;
+  --border-strong: #475569;
+
+  /*
+   * IMPORTANT:
+   * Dark-mode teal is intentionally deeper and
+   * less saturated than the original Figma output.
+   * This prevents the neon/glowing appearance.
+   */
+  --primary: #2a9c90;
+  --primary-hover: #2fa89a;
+  --primary-active: #218f83;
+  --primary-soft: #123f3b;
+  --primary-foreground: #f8fafc;
+
+  /* Semantic colors */
+  --success: #4ade80;
+  --success-soft: #14532d;
+
+  --warning: #fbbf24;
+  --warning-soft: #451a03;
+
+  --error: #f87171;
+  --error-soft: #450a0a;
+
+  --info: #60a5fa;
+  --info-soft: #172554;
+
+  /* Commerce */
+  --discount: #fb923c;
+  --discount-soft: #431407;
+
+  --focus-ring: rgba(42, 156, 144, 0.4);
+
+  /* Shadows are more subtle in dark mode */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* BASE */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* SELECTION */
+
+::selection {
+  background: var(--primary-soft);
+  color: var(--foreground);
+}
+
+/* FORM ELEMENTS */
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* FOCUS */
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* IMAGES */
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* SCROLLBAR */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground-muted);
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes brand-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
