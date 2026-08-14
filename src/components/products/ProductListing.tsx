@@ -11,6 +11,7 @@ import {
   MobileSortSheet,
   ProductFilters,
   ProductGrid,
+  ProductListingHeader,
   ProductPagination,
   type ProductSort,
 } from "@/components/products";
@@ -149,6 +150,14 @@ export function ProductListing() {
 
   return (
     <>
+      <ProductListingHeader
+        title="All Products"
+        description="Explore our collection of PC components, peripherals, and technology products."
+        productCount={filteredProducts.length}
+        sort={sort}
+        onSortChange={handleSortChange}
+      />
+
       {/* Mobile controls */}
       <div className="mt-6 lg:hidden">
         <MobileProductControls

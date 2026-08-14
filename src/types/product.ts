@@ -28,9 +28,16 @@ export interface Product {
   reviewCount: number;
 
   image: string;
+  images?: string[];
 
   inStock: boolean;
   stockCount?: number;
+
+  warranty?: string;
+
+  shipping?: string;
+
+  returnPolicy?: string;
 
   badge?: "deal" | "hot" | "new";
 

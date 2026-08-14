@@ -50,7 +50,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <Link
-          href={`/product/${product.slug}`}
+          href={`/products/${product.slug}`}
           className="flex h-full items-center justify-center p-6"
         >
           <div className="flex h-full w-full items-center justify-center text-center text-xs text-(--foreground-muted)">
@@ -66,7 +66,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </p>
 
         <Link
-          href={`/product/${product.slug}`}
+          href={`/products/${product.slug}`}
           className="mt-1 line-clamp-2 text-sm font-semibold leading-5 text-(--foreground) hover:text-(--primary)"
         >
           {product.name}

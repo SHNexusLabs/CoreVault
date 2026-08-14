@@ -1,15 +1,20 @@
-import { ChevronDown } from "lucide-react";
+import type { ProductSort } from "./MobileSortSheet";
+import { ProductSortMenu } from "./ProductSortMenu";
 
 interface ProductListingHeaderProps {
   title: string;
   description?: string;
   productCount: number;
+  sort: ProductSort;
+  onSortChange: (value: ProductSort) => void;
 }
 
 export function ProductListingHeader({
   title,
   description,
   productCount,
+  sort,
+  onSortChange,
 }: ProductListingHeaderProps) {
   return (
     <div className="flex flex-col gap-5 border-b border-(--border) pb-6 sm:flex-row sm:items-end sm:justify-between">
@@ -29,18 +34,12 @@ export function ProductListingHeader({
         )}
       </div>
 
-      <div className="flex shrink-0 items-center gap-3">
+      <div className="hidden shrink-0 items-center gap-3 lg:flex">
         <span className="text-sm text-(--foreground-muted)">
           {productCount} products
         </span>
 
-        <button
-          type="button"
-          className="inline-flex h-10 items-center gap-2 rounded-md border border-(--border) bg-(--surface) px-3 text-sm font-medium text-(--foreground) transition-colors hover:border-(--primary) hover:text-(--primary)"
-        >
-          Sort: Featured
-          <ChevronDown className="h-4 w-4" />
-        </button>
+        <ProductSortMenu value={sort} onChange={onSortChange} />
       </div>
     </div>
   );

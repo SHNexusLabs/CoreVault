@@ -14,8 +14,16 @@ export const products: Product[] = [
     rating: 4.8,
     reviewCount: 124,
     image: "/images/products/ryzen-7-9700x.webp",
+    images: [
+      "/images/products/ryzen-7-9700x.webp",
+      "/images/products/ryzen-7-9700x.webp",
+      "/images/products/ryzen-7-9700x.webp",
+    ],
     inStock: true,
     stockCount: 18,
+    warranty: "3 Years",
+    shipping: "Free shipping",
+    returnPolicy: "7-day replacement",
     badge: "deal",
     specifications: {
       Cores: "8",
