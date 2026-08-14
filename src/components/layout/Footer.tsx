@@ -1,9 +1,5 @@
 import Link from "next/link";
-import {
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 
 import { SiFacebook, SiGithub, SiInstagram } from "react-icons/si";
 import { FaTwitter } from "react-icons/fa";
@@ -43,14 +39,14 @@ export function Footer() {
             <Link
               href="/"
               className="inline-flex items-center gap-2"
-              aria-label="TechStore home"
+              aria-label="CoreVault home"
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-md bg-(--primary) text-sm font-bold text-(--primary-foreground)">
                 T
               </div>
 
               <span className="text-lg font-semibold tracking-tight text-(--foreground)">
-                TechStore
+                CoreVault
               </span>
             </Link>
 
@@ -62,7 +58,7 @@ export function Footer() {
             <div className="mt-5 space-y-2.5 text-xs text-(--foreground-muted)">
               <div className="flex items-center gap-2">
                 <Mail className="h-3.5 w-3.5" />
-                support@techstore.example
+                support@CoreVault.example
               </div>
 
               <div className="flex items-center gap-2">
@@ -90,7 +86,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="flex flex-col gap-4 border-t border-(--border) py-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-(--foreground-muted)">
-            © {new Date().getFullYear()} TechStore. All rights reserved.
+            © {new Date().getFullYear()} CoreVault. All rights reserved.
           </p>
 
           <div className="flex items-center gap-2">
@@ -131,9 +127,7 @@ interface FooterColumnProps {
 function FooterColumn({ title, links }: FooterColumnProps) {
   return (
     <div>
-      <h3 className="text-sm font-semibold text-(--foreground)">
-        {title}
-      </h3>
+      <h3 className="text-sm font-semibold text-(--foreground)">{title}</h3>
 
       <ul className="mt-4 space-y-3">
         {links.map((link) => (

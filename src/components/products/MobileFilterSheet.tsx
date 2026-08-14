@@ -4,36 +4,23 @@ import { Check, ChevronDown, RotateCcw, X } from "lucide-react";
 import { useState } from "react";
 
 import { filterGroups } from "./filter-data";
+import type { SelectedFilters } from "./filter-types";
 
 interface MobileFilterSheetProps {
   open: boolean;
+  selectedFilters: SelectedFilters;
+  onToggle: (groupId: string, value: string) => void;
+  onClear: () => void;
   onClose: () => void;
 }
 
-export function MobileFilterSheet({ open, onClose }: MobileFilterSheetProps) {
-  const [selectedFilters, setSelectedFilters] = useState<
-    Record<string, string[]>
-  >({});
-
-  const toggleFilter = (groupId: string, value: string) => {
-    setSelectedFilters((current) => {
-      const currentValues = current[groupId] ?? [];
-
-      const nextValues = currentValues.includes(value)
-        ? currentValues.filter((item) => item !== value)
-        : [...currentValues, value];
-
-      return {
-        ...current,
-        [groupId]: nextValues,
-      };
-    });
-  };
-
-  const clearFilters = () => {
-    setSelectedFilters({});
-  };
-
+export function MobileFilterSheet({
+  open,
+  selectedFilters,
+  onToggle,
+  onClear,
+  onClose,
+}: MobileFilterSheetProps) {
   const filterCount = Object.values(selectedFilters).reduce(
     (total, values) => total + values.length,
     0,
@@ -94,7 +81,7 @@ export function MobileFilterSheet({ open, onClose }: MobileFilterSheetProps) {
               key={group.id}
               group={group}
               selectedValues={selectedFilters[group.id] ?? []}
-              onToggle={(value) => toggleFilter(group.id, value)}
+              onToggle={(value) => onToggle(group.id, value)}
             />
           ))}
         </div>
@@ -103,7 +90,7 @@ export function MobileFilterSheet({ open, onClose }: MobileFilterSheetProps) {
         <div className="flex shrink-0 items-center gap-3 border-t border-(--border) bg-(--background) p-4">
           <button
             type="button"
-            onClick={clearFilters}
+            onClick={onClear}
             disabled={filterCount === 0}
             className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-(--border) px-4 text-sm font-medium text-(--foreground) disabled:cursor-not-allowed disabled:opacity-40"
           >

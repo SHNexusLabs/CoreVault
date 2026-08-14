@@ -71,7 +71,7 @@ export const products: Product[] = [
       Memory: "12GB GDDR7",
       Interface: "PCIe 5.0",
       "Memory Bus": "192-bit",
-      "Power": "250W",
+      Power: "250W",
     },
   },
 

@@ -1,9 +1,5 @@
 import Link from "next/link";
-import {
-  Heart,
-  ShoppingCart,
-  Star,
-} from "lucide-react";
+import { Heart, ShoppingCart, Star } from "lucide-react";
 
 import type { Product } from "@/types/product";
 import { Badge, IconButton } from "@/components/ui";
@@ -12,15 +8,11 @@ interface ProductCardProps {
   product: Product;
 }
 
-export function ProductCard({
-  product,
-}: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   const discount =
     product.originalPrice &&
     Math.round(
-      ((product.originalPrice - product.price) /
-        product.originalPrice) *
-        100,
+      ((product.originalPrice - product.price) / product.originalPrice) * 100,
     );
 
   return (
@@ -120,9 +112,7 @@ export function ProductCard({
         >
           <ShoppingCart className="h-4 w-4" />
 
-          {product.inStock
-            ? "Add to Cart"
-            : "Out of Stock"}
+          {product.inStock ? "Add to Cart" : "Out of Stock"}
         </button>
       </div>
     </article>

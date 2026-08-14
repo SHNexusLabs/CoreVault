@@ -1,9 +1,4 @@
-import {
-  BadgeCheck,
-  Headphones,
-  LockKeyhole,
-  Truck,
-} from "lucide-react";
+import { BadgeCheck, Headphones, LockKeyhole, Truck } from "lucide-react";
 
 import { Container, SectionHeading } from "@/components/ui";
 
@@ -34,12 +29,12 @@ const reasons = [
   },
 ];
 
-export function WhyTechStore() {
+export function WhyCoreVault() {
   return (
     <section className="py-12 sm:py-16">
       <Container>
         <SectionHeading
-          title="Why TechStore?"
+          title="Why CoreVault?"
           description="Everything you need for a better technology shopping experience."
         />
 

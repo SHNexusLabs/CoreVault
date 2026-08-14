@@ -5,7 +5,7 @@ import { PopularProducts } from "../components/home/PopularProducts";
 import { DealsSection } from "../components/home/DealsSection";
 import { FeaturedBrands } from "../components/home/FeaturedBrands";
 import { PCBuilderBanner } from "../components/home/PCBuilderBanner";
-import { WhyTechStore } from "../components/home/WhyTechStore";
+import { WhyCoreVault } from "../components/home/WhyCoreVault";
 
 export default function HomePage() {
   return (
@@ -16,7 +16,7 @@ export default function HomePage() {
       <PopularProducts />
       <DealsSection />
       <PCBuilderBanner />
-      <WhyTechStore />
+      <WhyCoreVault />
       <FeaturedBrands />
     </main>
   );

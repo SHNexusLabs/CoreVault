@@ -2,11 +2,7 @@
 
 import { Check, X } from "lucide-react";
 
-export type ProductSort =
-  | "featured"
-  | "price-low"
-  | "price-high"
-  | "rating"
+export type ProductSort = "featured" | "price-low" | "price-high" | "rating";
 
 interface MobileSortSheetProps {
   open: boolean;

@@ -1,9 +1,4 @@
-import {
-  Headphones,
-  RotateCcw,
-  ShieldCheck,
-  Truck,
-} from "lucide-react";
+import { Headphones, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 
 import { Container } from "@/components/ui";
 

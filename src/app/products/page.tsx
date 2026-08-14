@@ -1,8 +1,5 @@
 import { Container } from "@/components/ui";
-import {
-  ProductListing,
-  ProductListingHeader,
-} from "@/components/products";
+import { ProductListing, ProductListingHeader } from "@/components/products";
 import { products } from "@/data/products";
 
 export default function ProductsPage() {

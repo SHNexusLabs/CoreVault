@@ -53,7 +53,7 @@ export function PCBuilderBanner() {
               </h2>
 
               <p className="mt-4 max-w-lg text-sm leading-6 text-(--foreground-secondary) sm:text-base">
-                Choose your components and let TechStore help you build a
+                Choose your components and let CoreVault help you build a
                 compatible system with power estimates, component checks,
                 and a clear total price.
               </p>

@@ -2,14 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import {
-  Heart,
-  Menu,
-  Search,
-  ShoppingCart,
-  User,
-  X,
-} from "lucide-react";
+import { Heart, Menu, Search, ShoppingCart, User, X } from "lucide-react";
 
 import { Container, IconButton } from "@/components/ui";
 
@@ -55,14 +48,14 @@ export function Header() {
           <Link
             href="/"
             className="flex shrink-0 items-center gap-2"
-            aria-label="TechStore home"
+            aria-label="CoreVault home"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-md bg-(--primary) text-sm font-bold text-(--primary-foreground)">
               T
             </div>
 
             <span className="hidden text-lg font-semibold tracking-tight text-(--foreground) sm:block">
-              TechStore
+              CoreVault
             </span>
           </Link>
 

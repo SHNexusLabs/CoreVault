@@ -14,8 +14,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "TechStore",
-    template: "%s | TechStore",
+    default: "CoreVault",
+    template: "%s | CoreVault",
   },
   description:
     "Shop PC components, electronics, peripherals, and technology products.",
