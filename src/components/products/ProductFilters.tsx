@@ -3,60 +3,7 @@
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
-interface FilterOption {
-  label: string;
-  value: string;
-  count?: number;
-}
-
-interface FilterGroup {
-  id: string;
-  label: string;
-  options: FilterOption[];
-}
-
-const filterGroups: FilterGroup[] = [
-  {
-    id: "brand",
-    label: "Brand",
-    options: [
-      { label: "AMD", value: "amd", count: 18 },
-      { label: "Intel", value: "intel", count: 15 },
-      { label: "NVIDIA", value: "nvidia", count: 22 },
-      { label: "ASUS", value: "asus", count: 17 },
-      { label: "MSI", value: "msi", count: 14 },
-      { label: "Corsair", value: "corsair", count: 12 },
-    ],
-  },
-  {
-    id: "category",
-    label: "Category",
-    options: [
-      { label: "Processors", value: "processors", count: 24 },
-      { label: "Graphics Cards", value: "graphics-cards", count: 28 },
-      { label: "Motherboards", value: "motherboards", count: 19 },
-      { label: "Memory", value: "memory", count: 16 },
-      { label: "Storage", value: "storage", count: 21 },
-      { label: "Cooling", value: "cooling", count: 12 },
-    ],
-  },
-  {
-    id: "availability",
-    label: "Availability",
-    options: [
-      { label: "In Stock", value: "in-stock", count: 104 },
-      { label: "Out of Stock", value: "out-of-stock", count: 24 },
-    ],
-  },
-  {
-    id: "rating",
-    label: "Rating",
-    options: [
-      { label: "4★ & above", value: "4", count: 76 },
-      { label: "3★ & above", value: "3", count: 109 },
-    ],
-  },
-];
+import { filterGroups, type FilterGroup } from "./filter-data";
 
 export function ProductFilters() {
   const [selectedFilters, setSelectedFilters] = useState<
@@ -91,9 +38,7 @@ export function ProductFilters() {
       <div className="sticky top-24 rounded-lg border border-(--border) bg-(--background) p-4">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-(--border) pb-4">
-          <h2 className="text-sm font-semibold text-(--foreground)">
-            Filters
-          </h2>
+          <h2 className="text-sm font-semibold text-(--foreground)">Filters</h2>
 
           {hasFilters && (
             <button
@@ -114,9 +59,7 @@ export function ProductFilters() {
               key={group.id}
               group={group}
               selectedValues={selectedFilters[group.id] ?? []}
-              onToggle={(value) =>
-                toggleFilter(group.id, value)
-              }
+              onToggle={(value) => toggleFilter(group.id, value)}
             />
           ))}
         </div>
@@ -131,11 +74,7 @@ interface FilterGroupProps {
   onToggle: (value: string) => void;
 }
 
-function FilterGroup({
-  group,
-  selectedValues,
-  onToggle,
-}: FilterGroupProps) {
+function FilterGroup({ group, selectedValues, onToggle }: FilterGroupProps) {
   const [open, setOpen] = useState(true);
 
   return (
@@ -160,9 +99,7 @@ function FilterGroup({
       {open && (
         <div className="mt-3 space-y-2.5">
           {group.options.map((option) => {
-            const checked = selectedValues.includes(
-              option.value,
-            );
+            const checked = selectedValues.includes(option.value);
 
             return (
               <label

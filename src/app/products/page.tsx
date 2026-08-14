@@ -1,9 +1,9 @@
 import { Container } from "@/components/ui";
 import {
-  ProductFilters,
-  ProductGrid,
+  ProductListing,
   ProductListingHeader,
 } from "@/components/products";
+import { products } from "@/data/products";
 
 export default function ProductsPage() {
   return (
@@ -13,16 +13,10 @@ export default function ProductsPage() {
           <ProductListingHeader
             title="All Products"
             description="Explore our collection of PC components, peripherals, and technology products."
-            productCount={128}
+            productCount={products.length}
           />
 
-          <div className="mt-8 flex gap-6">
-            <ProductFilters />
-
-            <div className="min-w-0 flex-1">
-              <ProductGrid />
-            </div>
-          </div>
+          <ProductListing />
         </div>
       </Container>
     </main>

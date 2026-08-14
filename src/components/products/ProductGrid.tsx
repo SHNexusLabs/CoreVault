@@ -1,13 +1,37 @@
 import { products } from "@/data/products";
 import { ProductCard } from "@/components/products/ProductCard";
+import type { ProductSort } from "./MobileSortSheet";
 
 interface ProductGridProps {
   limit?: number;
+  sort?: ProductSort;
 }
 
-export function ProductGrid({ limit }: ProductGridProps) {
+export function ProductGrid({
+  limit,
+  sort = "featured",
+}: ProductGridProps) {
+  const sortedProducts = [...products].sort((a, b) => {
+    switch (sort) {
+      case "price-low":
+        return a.price - b.price;
+
+      case "price-high":
+        return b.price - a.price;
+
+      case "rating":
+        return b.rating - a.rating;
+
+      case "featured":
+      default:
+        return 0;
+    }
+  });
+
   const displayedProducts =
-    limit !== undefined ? products.slice(0, limit) : products;
+    limit !== undefined
+      ? sortedProducts.slice(0, limit)
+      : sortedProducts;
 
   if (displayedProducts.length === 0) {
     return (
