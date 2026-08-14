@@ -37,7 +37,7 @@ function BrandRow() {
             key={brand.name}
             className="flex shrink-0 items-center gap-2.5 text-(--foreground-secondary) opacity-70 transition-opacity hover:opacity-100"
           >
-            <BrandIcon aria-hidden="true" className="h-6 w-6 shrink-0" />
+            <BrandIcon aria-hidden="true" className="h-6 w-6 shrink-0 " />
 
             {/* <span className="text-sm font-semibold tracking-wide">
               {brand.name}
