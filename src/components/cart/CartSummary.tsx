@@ -52,12 +52,12 @@ export function CartSummary() {
         </span>
       </div>
 
-      <button
-        type="button"
+      <Link
+        href="/checkout"
         className="mt-5 flex h-12 w-full items-center justify-center rounded-md bg-(--primary) px-5 text-sm font-semibold text-(--primary-foreground) transition-colors hover:bg-(--primary-hover)"
       >
         Proceed to Checkout
-      </button>
+      </Link>
 
       <Link
         href="/products"
