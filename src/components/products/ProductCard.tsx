@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 
@@ -68,11 +69,15 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <Link
           href={`/products/${product.slug}`}
-          className="flex h-full items-center justify-center p-6"
+          className="relative flex h-full items-center justify-center p-6"
         >
-          <div className="flex h-full w-full items-center justify-center text-center text-xs text-(--foreground-muted)">
-            Product Image
-          </div>
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            className="object-contain p-6"
+          />
         </Link>
       </div>
 

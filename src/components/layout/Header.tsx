@@ -3,9 +3,19 @@
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
 import { MiniCart } from "@/components/cart/MiniCart";
-import { Heart, Menu, Search, ShoppingCart, User, X } from "lucide-react";
+import {
+  Heart,
+  Menu,
+  Search,
+  ShoppingCart,
+  User,
+  X,
+  Moon,
+  Sun,
+} from "lucide-react";
 import { useCartStore } from "@/store/cart";
 import { Container, IconButton } from "@/components/ui";
+import { useTheme } from "@/components/theme/ThemeProvider";
 
 const navigation = [
   { label: "Home", href: "/" },
@@ -22,6 +32,7 @@ const getClientSnapshot = () => true;
 const getServerSnapshot = () => false;
 
 export function Header() {
+  const { theme, toggleTheme } = useTheme();
   const [cartOpen, setCartOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -109,6 +120,23 @@ export function Header() {
                 label="Wishlist"
               />
             </Link>
+
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={
+                theme === "dark"
+                  ? "Switch to light mode"
+                  : "Switch to dark mode"
+              }
+              className="flex h-10 w-10 items-center justify-center rounded-md text-(--foreground-muted) transition-colors hover:bg-(--surface) hover:text-(--foreground)"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-4.5 w-4.5" />
+              ) : (
+                <Moon className="h-4.5 w-4.5" />
+              )}
+            </button>
 
             <div className="relative">
               <button
