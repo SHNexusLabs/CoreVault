@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 
+import { useCartStore } from "@/store/cart";
 import type { Product } from "@/types/product";
 import { Badge, IconButton } from "@/components/ui";
 
@@ -9,6 +13,19 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const addItem = useCartStore((state) => state.addItem);
+
+  const [added, setAdded] = useState(false);
+
+  const handleAddToCart = () => {
+    addItem(product);
+    setAdded(true);
+
+    setTimeout(() => {
+      setAdded(false);
+    }, 1500);
+  };
+
   const discount =
     product.originalPrice &&
     Math.round(
@@ -107,12 +124,17 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Add to cart */}
         <button
           type="button"
+          onClick={handleAddToCart}
           disabled={!product.inStock}
           className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-(--primary) px-3 text-sm font-medium text-(--primary-foreground) transition-colors hover:bg-(--primary-hover) disabled:cursor-not-allowed disabled:bg-(--surface) disabled:text-(--foreground-muted)"
         >
           <ShoppingCart className="h-4 w-4" />
 
-          {product.inStock ? "Add to Cart" : "Out of Stock"}
+          {!product.inStock
+            ? "Out of Stock"
+            : added
+              ? "Added to Cart ✓"
+              : "Add to Cart"}
         </button>
       </div>
     </article>

@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
+import { MiniCart } from "@/components/cart/MiniCart";
 import { Heart, Menu, Search, ShoppingCart, User, X } from "lucide-react";
-
+import { useCartStore } from "@/store/cart";
 import { Container, IconButton } from "@/components/ui";
 
 const navigation = [
@@ -14,8 +15,25 @@ const navigation = [
   { label: "Brands", href: "/brands" },
 ];
 
+const emptySubscribe = () => () => {};
+
+const getClientSnapshot = () => true;
+
+const getServerSnapshot = () => false;
+
 export function Header() {
+  const [cartOpen, setCartOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const items = useCartStore((state) => state.items);
+
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    getClientSnapshot,
+    getServerSnapshot,
+  );
+
+  const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <header className="sticky top-0 z-50 border-b border-(--border) bg-(--background)/95 backdrop-blur-sm">
@@ -92,16 +110,24 @@ export function Header() {
               />
             </Link>
 
-            <Link href="/cart" className="relative">
-              <IconButton
-                icon={<ShoppingCart className="h-4.5 w-4.5" />}
-                label="Shopping cart"
-              />
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setCartOpen((current) => !current)}
+                aria-label="Open shopping cart"
+                className="relative flex h-10 w-10 items-center justify-center rounded-md text-(--foreground-muted) transition-colors hover:bg-(--surface) hover:text-(--foreground)"
+              >
+                <ShoppingCart className="h-5 w-5" />
 
-              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-(--discount) px-1 text-[10px] font-semibold text-white">
-                0
-              </span>
-            </Link>
+                {mounted && itemCount > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-(--primary) px-1 text-[10px] font-bold text-(--primary-foreground)">
+                    {itemCount > 99 ? "99+" : itemCount}
+                  </span>
+                )}
+              </button>
+
+              <MiniCart open={cartOpen} onClose={() => setCartOpen(false)} />
+            </div>
 
             <Link href="/account" className="hidden sm:block">
               <IconButton

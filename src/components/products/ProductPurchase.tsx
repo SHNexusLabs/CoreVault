@@ -3,6 +3,7 @@
 import { Heart, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 
+import { useCartStore } from "@/store/cart";
 import type { Product } from "@/types/product";
 
 interface ProductPurchaseProps {
@@ -12,6 +13,8 @@ interface ProductPurchaseProps {
 export function ProductPurchase({ product }: ProductPurchaseProps) {
   const [quantity, setQuantity] = useState(1);
   const [wishlisted, setWishlisted] = useState(false);
+  const addItem = useCartStore((state) => state.addItem);
+  const [added, setAdded] = useState(false);
 
   const maxQuantity = product.stockCount ?? 1;
 
@@ -24,11 +27,12 @@ export function ProductPurchase({ product }: ProductPurchaseProps) {
   };
 
   const handleAddToCart = () => {
-    // Cart functionality will be connected later.
-    console.log("Add to cart:", {
-      product: product.id,
-      quantity,
-    });
+    addItem(product, quantity);
+    setAdded(true);
+
+    setTimeout(() => {
+      setAdded(false);
+    }, 1500);
   };
 
   if (!product.inStock) {
@@ -106,7 +110,8 @@ export function ProductPurchase({ product }: ProductPurchaseProps) {
         className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-(--primary) px-5 text-sm font-semibold text-(--primary-foreground) transition-colors hover:bg-(--primary-hover)"
       >
         <ShoppingCart className="h-4 w-4" />
-        Add to Cart
+
+        {added ? "Added to Cart ✓" : "Add to Cart"}
       </button>
 
       {/* Buy Now */}
