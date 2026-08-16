@@ -16,6 +16,7 @@ import {
 import { useCartStore } from "@/store/cart";
 import { Container, IconButton } from "@/components/ui";
 import { useTheme } from "@/components/theme/ThemeProvider";
+import { useWishlistStore } from "@/store/wishlist";
 
 const navigation = [
   { label: "Home", href: "/" },
@@ -45,7 +46,9 @@ export function Header() {
   );
 
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
+  const wishlistCount = useWishlistStore((state) => state.getItemCount());
 
+  const wishlistHydrated = useWishlistStore((state) => state.hasHydrated);
   return (
     <header className="sticky top-0 z-50 border-b border-(--border) bg-(--background)/95 backdrop-blur-sm">
       {/* Announcement */}
@@ -114,11 +117,26 @@ export function Header() {
 
           {/* Actions */}
           <div className="ml-auto flex items-center gap-1">
-            <Link href="/wishlist">
+            <Link href="/wishlist" className="relative" aria-label="Wishlist">
               <IconButton
-                icon={<Heart className="h-4.5 w-4.5" />}
+                icon={
+                  <Heart
+                    className="h-4.5 w-4.5"
+                    fill={
+                      wishlistHydrated && wishlistCount > 0
+                        ? "currentColor"
+                        : "none"
+                    }
+                  />
+                }
                 label="Wishlist"
               />
+
+              {wishlistHydrated && wishlistCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-(--primary) px-1 text-[10px] font-bold text-(--primary-foreground)">
+                  {wishlistCount > 99 ? "99+" : wishlistCount}
+                </span>
+              )}
             </Link>
 
             <button

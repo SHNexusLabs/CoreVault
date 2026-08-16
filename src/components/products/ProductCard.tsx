@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 
+import { useWishlistStore } from "@/store/wishlist";
 import { useCartStore } from "@/store/cart";
 import type { Product } from "@/types/product";
 import { Badge, IconButton } from "@/components/ui";
@@ -14,6 +15,12 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const toggleWishlist = useWishlistStore((state) => state.toggleItem);
+
+  const isWishlisted = useWishlistStore((state) =>
+    state.isWishlisted(product.id),
+  );
+
   const addItem = useCartStore((state) => state.addItem);
 
   const [added, setAdded] = useState(false);
@@ -59,11 +66,23 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <div className="absolute right-3 top-3 z-10">
           <IconButton
-            icon={<Heart className="h-4 w-4" />}
-            label={`Add ${product.name} to wishlist`}
+            icon={
+              <Heart
+                className="h-4 w-4"
+                fill={isWishlisted ? "currentColor" : "none"}
+              />
+            }
+            label={
+              isWishlisted
+                ? `Remove ${product.name} from wishlist`
+                : `Add ${product.name} to wishlist`
+            }
             variant="outline"
             size="sm"
-            className="bg-(--background)/90 backdrop-blur-sm"
+            className={`bg-(--background)/90 backdrop-blur-sm ${
+              isWishlisted ? "border-(--primary) text-(--primary)" : ""
+            }`}
+            onClick={() => toggleWishlist(product)}
           />
         </div>
 

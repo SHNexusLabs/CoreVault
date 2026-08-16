@@ -30,9 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
-      <head>  
-      <Script id="theme-initializer" strategy="beforeInteractive">
-        {`
+      <head>
+        <Script id="theme-initializer" strategy="beforeInteractive">
+          {`
           (() => {
             const storedTheme = localStorage.getItem("corevault-theme");
 
@@ -49,7 +49,7 @@ export default function RootLayout({
             );
           })();
         `}
-      </Script>
+        </Script>
       </head>
       <body className={inter.variable}>
         <ThemeProvider>

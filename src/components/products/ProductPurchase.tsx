@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { useCartStore } from "@/store/cart";
 import type { Product } from "@/types/product";
+import { useWishlistStore } from "@/store/wishlist";
 
 interface ProductPurchaseProps {
   product: Product;
@@ -12,8 +13,15 @@ interface ProductPurchaseProps {
 
 export function ProductPurchase({ product }: ProductPurchaseProps) {
   const [quantity, setQuantity] = useState(1);
-  const [wishlisted, setWishlisted] = useState(false);
+
   const addItem = useCartStore((state) => state.addItem);
+
+  const toggleWishlist = useWishlistStore((state) => state.toggleItem);
+
+  const wishlisted = useWishlistStore((state) =>
+    state.isWishlisted(product.id),
+  );
+
   const [added, setAdded] = useState(false);
 
   const maxQuantity = product.stockCount ?? 1;
@@ -87,7 +95,7 @@ export function ProductPurchase({ product }: ProductPurchaseProps) {
 
         <button
           type="button"
-          onClick={() => setWishlisted((current) => !current)}
+          onClick={() => toggleWishlist(product)}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
           aria-pressed={wishlisted}
           className={`flex h-11 w-11 items-center justify-center rounded-md border transition-colors ${
