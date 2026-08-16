@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useSyncExternalStore } from "react";
 import { MiniCart } from "@/components/cart/MiniCart";
 import {
@@ -33,8 +34,13 @@ const getClientSnapshot = () => true;
 const getServerSnapshot = () => false;
 
 export function Header() {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+
   const { theme, toggleTheme } = useTheme();
+
   const [cartOpen, setCartOpen] = useState(false);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const items = useCartStore((state) => state.items);
@@ -49,6 +55,20 @@ export function Header() {
   const wishlistCount = useWishlistStore((state) => state.getItemCount());
 
   const wishlistHydrated = useWishlistStore((state) => state.hasHydrated);
+
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const query = searchQuery.trim();
+
+    if (!query) {
+      router.push("/products");
+      return;
+    }
+
+    router.push(`/products?search=${encodeURIComponent(query)}`);
+  };
+
   return (
     <header className="sticky top-0 z-50 border-b border-(--border) bg-(--background)/95 backdrop-blur-sm">
       {/* Announcement */}
@@ -105,15 +125,20 @@ export function Header() {
           </nav>
 
           {/* Search */}
-          <div className="relative ml-auto hidden min-w-0 flex-1 max-w-md md:block">
+          <form
+            onSubmit={handleSearch}
+            className="relative ml-auto hidden min-w-0 flex-1 max-w-md md:block"
+          >
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--foreground-muted)" />
 
             <input
               type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Search products..."
               className="h-10 w-full rounded-md border border-(--border) bg-(--surface) pl-9 pr-4 text-sm text-(--foreground) outline-none placeholder:text-(--foreground-muted) focus:border-(--primary) focus:ring-2 focus:ring-(--focus-ring)"
             />
-          </div>
+          </form>
 
           {/* Actions */}
           <div className="ml-auto flex items-center gap-1">
@@ -187,15 +212,17 @@ export function Header() {
 
       {/* Mobile search */}
       <div className="border-t border-(--border) px-4 py-3 md:hidden">
-        <div className="relative">
+        <form onClick={handleSearch} className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--foreground-muted)" />
 
           <input
             type="search"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
             placeholder="Search products..."
             className="h-10 w-full rounded-md border border-(--border) bg-(--surface) pl-9 pr-4 text-sm text-(--foreground) outline-none placeholder:text-(--foreground-muted) focus:border-(--primary) focus:ring-2 focus:ring-(--focus-ring)"
           />
-        </div>
+        </form>
       </div>
 
       {/* Mobile navigation */}

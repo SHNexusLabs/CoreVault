@@ -2,8 +2,7 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type IconButtonVariant = "default" | "ghost" | "outline";
 
-interface IconButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: ReactNode;
   label: string;
   variant?: IconButtonVariant;
@@ -40,11 +39,11 @@ export function IconButton({
       title={label}
       className={[
         "inline-flex shrink-0 items-center justify-center",
-        "rounded-[var(--radius-md)]",
+        "rounded-md",
         "transition-colors duration-200",
         "focus-visible:outline-none",
         "focus-visible:ring-2",
-        "focus-visible:ring-[var(--primary)]",
+        "focus-visible:ring-(--primary)",
         "disabled:pointer-events-none",
         "disabled:opacity-50",
         variants[variant],

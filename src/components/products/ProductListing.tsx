@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { products } from "@/data/products";
 
@@ -17,8 +18,14 @@ import {
 } from "@/components/products";
 
 import type { SelectedFilters } from "./filter-types";
+import Link from "next/link";
+import { Search } from "lucide-react";
 
 export function ProductListing() {
+  const searchParams = useSearchParams();
+
+  const searchQuery = searchParams.get("search")?.trim().toLowerCase() ?? "";
+
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
@@ -54,6 +61,12 @@ export function ProductListing() {
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
+      const matchesSearch =
+        searchQuery.length === 0 ||
+        product.name.toLowerCase().includes(searchQuery) ||
+        product.brand.toLowerCase().includes(searchQuery) ||
+        product.category.toLowerCase().includes(searchQuery);
+
       const brandFilters = selectedFilters.brand ?? [];
       const categoryFilters = selectedFilters.category ?? [];
       const availabilityFilters = selectedFilters.availability ?? [];
@@ -86,10 +99,14 @@ export function ProductListing() {
         ratingFilters.some((filter) => product.rating >= Number(filter));
 
       return (
-        matchesBrand && matchesCategory && matchesAvailability && matchesRating
+        matchesSearch &&
+        matchesBrand &&
+        matchesCategory &&
+        matchesAvailability &&
+        matchesRating
       );
     });
-  }, [selectedFilters]);
+  }, [searchQuery, selectedFilters]);
 
   const sortedProducts = useMemo(() => {
     return [...filteredProducts].sort((a, b) => {
@@ -116,6 +133,9 @@ export function ProductListing() {
     (currentPage - 1) * PRODUCTS_PER_PAGE,
     currentPage * PRODUCTS_PER_PAGE,
   );
+
+  const hasSearchResults =
+    searchQuery.length > 0 && filteredProducts.length === 0;
 
   const handleSortChange = (value: ProductSort) => {
     setCurrentPage(1);
@@ -183,7 +203,34 @@ export function ProductListing() {
         />
 
         <div className="min-w-0 flex-1">
-          <ProductGrid products={paginatedProducts} />
+          {hasSearchResults ? (
+  <div className="flex min-h-80 flex-col items-center justify-center rounded-lg border border-(--border) bg-(--surface) px-6 text-center">
+    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--background)">
+      <Search className="h-5 w-5 text-(--foreground-muted)" />
+    </div>
+
+    <h2 className="mt-4 text-lg font-semibold text-(--foreground)">
+      No products found
+    </h2>
+
+    <p className="mt-2 max-w-md text-sm text-(--foreground-muted)">
+      We couldn&apos;t find any products matching{" "}
+      <span className="font-medium text-(--foreground)">
+        &quot;{searchQuery}&quot;
+      </span>
+      .
+    </p>
+
+    <Link
+      href="/products"
+      className="mt-5 inline-flex h-10 items-center justify-center rounded-md bg-(--primary) px-4 text-sm font-semibold text-(--primary-foreground) transition-colors hover:bg-(--primary-hover)"
+    >
+      Clear Search
+    </Link>
+  </div>
+) : (
+  <ProductGrid products={paginatedProducts} />
+)}
 
           <ProductPagination
             currentPage={currentPage}

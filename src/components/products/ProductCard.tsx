@@ -21,6 +21,10 @@ export function ProductCard({ product }: ProductCardProps) {
     state.isWishlisted(product.id),
   );
 
+  const wishlistHydrated = useWishlistStore((state) => state.hasHydrated);
+
+  const wishlistActive = wishlistHydrated && isWishlisted;
+
   const addItem = useCartStore((state) => state.addItem);
 
   const [added, setAdded] = useState(false);
@@ -69,18 +73,23 @@ export function ProductCard({ product }: ProductCardProps) {
             icon={
               <Heart
                 className="h-4 w-4"
-                fill={isWishlisted ? "currentColor" : "none"}
+                fill={wishlistActive ? "currentColor" : "none"}
               />
             }
+            title={
+              wishlistActive
+                ? `Remove ${product.name} from wishlist`
+                : `Add ${product.name} to wishlist`
+            }
             label={
-              isWishlisted
+              wishlistActive
                 ? `Remove ${product.name} from wishlist`
                 : `Add ${product.name} to wishlist`
             }
             variant="outline"
             size="sm"
             className={`bg-(--background)/90 backdrop-blur-sm ${
-              isWishlisted ? "border-(--primary) text-(--primary)" : ""
+              wishlistActive ? "border-(--primary) text-(--primary)" : ""
             }`}
             onClick={() => toggleWishlist(product)}
           />
