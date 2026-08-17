@@ -1,9 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
+import { Search } from "lucide-react";
+
 import { products } from "@/data/products";
+import { searchProducts } from "@/lib/search";
 
 import {
   ActiveFilterChips,
@@ -16,10 +20,7 @@ import {
   ProductPagination,
   type ProductSort,
 } from "@/components/products";
-
 import type { SelectedFilters } from "./filter-types";
-import Link from "next/link";
-import { Search } from "lucide-react";
 
 export function ProductListing() {
   const searchParams = useSearchParams();
@@ -60,13 +61,9 @@ export function ProductListing() {
   };
 
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const matchesSearch =
-        searchQuery.length === 0 ||
-        product.name.toLowerCase().includes(searchQuery) ||
-        product.brand.toLowerCase().includes(searchQuery) ||
-        product.category.toLowerCase().includes(searchQuery);
+    const searchResults = searchProducts(products, searchQuery);
 
+    return searchResults.filter((product) => {
       const brandFilters = selectedFilters.brand ?? [];
       const categoryFilters = selectedFilters.category ?? [];
       const availabilityFilters = selectedFilters.availability ?? [];
@@ -99,11 +96,7 @@ export function ProductListing() {
         ratingFilters.some((filter) => product.rating >= Number(filter));
 
       return (
-        matchesSearch &&
-        matchesBrand &&
-        matchesCategory &&
-        matchesAvailability &&
-        matchesRating
+        matchesBrand && matchesCategory && matchesAvailability && matchesRating
       );
     });
   }, [searchQuery, selectedFilters]);
@@ -204,33 +197,33 @@ export function ProductListing() {
 
         <div className="min-w-0 flex-1">
           {hasSearchResults ? (
-  <div className="flex min-h-80 flex-col items-center justify-center rounded-lg border border-(--border) bg-(--surface) px-6 text-center">
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--background)">
-      <Search className="h-5 w-5 text-(--foreground-muted)" />
-    </div>
+            <div className="flex min-h-80 flex-col items-center justify-center rounded-lg border border-(--border) bg-(--surface) px-6 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--background)">
+                <Search className="h-5 w-5 text-(--foreground-muted)" />
+              </div>
 
-    <h2 className="mt-4 text-lg font-semibold text-(--foreground)">
-      No products found
-    </h2>
+              <h2 className="mt-4 text-lg font-semibold text-(--foreground)">
+                No products found
+              </h2>
 
-    <p className="mt-2 max-w-md text-sm text-(--foreground-muted)">
-      We couldn&apos;t find any products matching{" "}
-      <span className="font-medium text-(--foreground)">
-        &quot;{searchQuery}&quot;
-      </span>
-      .
-    </p>
+              <p className="mt-2 max-w-md text-sm text-(--foreground-muted)">
+                We couldn&apos;t find any products matching{" "}
+                <span className="font-medium text-(--foreground)">
+                  &quot;{searchQuery}&quot;
+                </span>
+                .
+              </p>
 
-    <Link
-      href="/products"
-      className="mt-5 inline-flex h-10 items-center justify-center rounded-md bg-(--primary) px-4 text-sm font-semibold text-(--primary-foreground) transition-colors hover:bg-(--primary-hover)"
-    >
-      Clear Search
-    </Link>
-  </div>
-) : (
-  <ProductGrid products={paginatedProducts} />
-)}
+              <Link
+                href="/products"
+                className="mt-5 inline-flex h-10 items-center justify-center rounded-md bg-(--primary) px-4 text-sm font-semibold text-(--primary-foreground) transition-colors hover:bg-(--primary-hover)"
+              >
+                Clear Search
+              </Link>
+            </div>
+          ) : (
+            <ProductGrid products={paginatedProducts} />
+          )}
 
           <ProductPagination
             currentPage={currentPage}

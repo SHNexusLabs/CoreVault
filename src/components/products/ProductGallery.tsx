@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type { Product } from "@/types/product";
 
@@ -21,17 +21,17 @@ export function ProductGallery({ product }: ProductGalleryProps) {
 
   const currentImage = images[selectedImage] ?? product.image;
 
-  const previousImage = () => {
+  const previousImage = useCallback(() => {
     setSelectedImage((current) =>
       current === 0 ? images.length - 1 : current - 1,
     );
-  };
+  }, [images.length]);
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     setSelectedImage((current) =>
       current === images.length - 1 ? 0 : current + 1,
     );
-  };
+  }, [images.length]);
 
   useEffect(() => {
     if (!lightboxOpen) {
@@ -57,7 +57,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [lightboxOpen, images.length]);
+  }, [lightboxOpen, previousImage, nextImage]);
 
   useEffect(() => {
     if (!lightboxOpen) {
@@ -140,7 +140,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
       {/* Lightbox */}
       {lightboxOpen && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 sm:p-8"
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 p-4 sm:p-8"
           role="dialog"
           aria-modal="true"
           aria-label={`${product.name} image viewer`}
