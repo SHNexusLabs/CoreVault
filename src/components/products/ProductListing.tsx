@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 import { Search } from "lucide-react";
 
-import { products } from "@/data/products";
+import { productService } from "@/services/productService";
 import { searchProducts } from "@/lib/search";
 
 import {
@@ -21,6 +21,8 @@ import {
   type ProductSort,
 } from "@/components/products";
 import type { SelectedFilters } from "./filter-types";
+
+const products = productService.getAll();
 
 export function ProductListing() {
   const searchParams = useSearchParams();

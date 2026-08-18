@@ -2,7 +2,7 @@
 
 import { Check, Truck, Zap } from "lucide-react";
 
-export type DeliveryMethod = "standard" | "express";
+import type { DeliveryMethod } from "@/types/order";
 
 interface DeliveryOptionsProps {
   value: DeliveryMethod;

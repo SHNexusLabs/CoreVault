@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { products } from "@/data/products";
+import { productService } from "@/services/productService";
 import {
   ProductBreadcrumbs,
   ProductDescription,
@@ -23,17 +23,16 @@ interface ProductPageProps {
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
 
-  const product = products.find((item) => item.slug === slug);
+  const product = productService.getBySlug(slug);
 
   if (!product) {
     notFound();
   }
 
-  const relatedProducts = products
-    .filter(
-      (item) => item.category === product.category && item.id !== product.id,
-    )
-    .slice(0, 4);
+  const relatedProducts = productService.getRelated(
+    product.id,
+    product.category,
+  );
 
   return (
     <main>

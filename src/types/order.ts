@@ -1,6 +1,7 @@
 import type { CartItem } from "@/types/cart";
-import type { PaymentMethod } from "@/components/checkout/PaymentOptions";
-import type { DeliveryMethod } from "@/components/checkout/DeliveryOptions";
+
+export type DeliveryMethod = "standard" | "express";
+export type PaymentMethod = "upi" | "card" | "cod";
 
 export interface ShippingDetails {
   fullName: string;

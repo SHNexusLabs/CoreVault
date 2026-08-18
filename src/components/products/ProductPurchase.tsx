@@ -22,6 +22,10 @@ export function ProductPurchase({ product }: ProductPurchaseProps) {
     state.isWishlisted(product.id),
   );
 
+  const wishlistHydrated = useWishlistStore((state) => state.hasHydrated);
+
+  const wishlistActive = wishlistHydrated && wishlisted;
+
   const [added, setAdded] = useState(false);
 
   const maxQuantity = product.stockCount ?? 1;
@@ -96,17 +100,19 @@ export function ProductPurchase({ product }: ProductPurchaseProps) {
         <button
           type="button"
           onClick={() => toggleWishlist(product)}
-          aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          aria-pressed={wishlisted}
+          aria-label={
+            wishlistActive ? "Remove from wishlist" : "Add to wishlist"
+          }
+          aria-pressed={wishlistActive}
           className={`flex h-11 w-11 items-center justify-center rounded-md border transition-colors ${
-            wishlisted
+            wishlistActive
               ? "border-(--primary) text-(--primary)"
               : "border-(--border) text-(--foreground-muted) hover:border-(--primary) hover:text-(--primary)"
           }`}
         >
           <Heart
             className="h-5 w-5"
-            fill={wishlisted ? "currentColor" : "none"}
+            fill={wishlistActive ? "currentColor" : "none"}
           />
         </button>
       </div>

@@ -2,7 +2,7 @@
 
 import { Check, CreditCard, Smartphone, WalletCards } from "lucide-react";
 
-export type PaymentMethod = "upi" | "card" | "cod";
+import type { PaymentMethod } from "@/types/order";
 
 interface PaymentOptionsProps {
   value: PaymentMethod;
