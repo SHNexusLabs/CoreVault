@@ -1,7 +1,7 @@
 "use client";
 
 import type { CartItem } from "@/types/cart";
-import type { DeliveryMethod } from "@/components/checkout/DeliveryOptions";
+import type { DeliveryMethod } from "@/types/order";
 
 interface OrderSummaryProps {
   items: CartItem[];

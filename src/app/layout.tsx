@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Inter } from "next/font/google";
 
 import { Footer } from "../components/layout/Footer";
@@ -31,25 +30,28 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
-        <Script id="theme-initializer" strategy="beforeInteractive">
-          {`
-          (() => {
-            const storedTheme = localStorage.getItem("corevault-theme");
+        <script
+          id="theme-initializer"
+          dangerouslySetInnerHTML={{
+            __html: `
+      (() => {
+        const storedTheme = localStorage.getItem("corevault-theme");
 
-            const theme =
-              storedTheme === "dark" || storedTheme === "light"
-                ? storedTheme
-                : window.matchMedia("(prefers-color-scheme: dark)").matches
-                  ? "dark"
-                  : "light";
+        if (storedTheme === "dark" || storedTheme === "light") {
+          document.documentElement.dataset.theme = storedTheme;
+          return;
+        }
 
-            document.documentElement.classList.toggle(
-              "dark",
-              theme === "dark"
-            );
-          })();
-        `}
-        </Script>
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+
+        document.documentElement.dataset.theme =
+          prefersDark ? "dark" : "light";
+      })();
+    `,
+          }}
+        />
       </head>
       <body className={inter.variable}>
         <ThemeProvider>
