@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import { Search } from "lucide-react";
 
-import { productService } from "@/services/productService";
-import { searchProducts } from "@/lib/search";
+import type { Product } from "@/types/product";
+import { getProducts } from "@/lib/api/products";
 
 import {
   ActiveFilterChips,
@@ -20,25 +20,86 @@ import {
   ProductPagination,
   type ProductSort,
 } from "@/components/products";
-import type { SelectedFilters } from "./filter-types";
 
-const products = productService.getAll();
+import type { SelectedFilters } from "./filter-types";
 
 export function ProductListing() {
   const searchParams = useSearchParams();
 
-  const searchQuery = searchParams.get("search")?.trim().toLowerCase() ?? "";
+  const searchQuery =
+    searchParams.get("search")?.trim().toLowerCase() ?? "";
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
   const [sort, setSort] = useState<ProductSort>("featured");
 
-  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({});
+  const [selectedFilters, setSelectedFilters] =
+    useState<SelectedFilters>({});
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const PRODUCTS_PER_PAGE = 8;
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (searchQuery) {
+      params.set("search", searchQuery);
+    }
+
+    const brand = selectedFilters.brand?.[0];
+    const category = selectedFilters.category?.[0];
+    const availability = selectedFilters.availability?.[0];
+    const rating = selectedFilters.rating?.[0];
+
+    if (brand) {
+      params.set("brand", brand);
+    }
+
+    if (category) {
+      params.set("category", category);
+    }
+
+    if (availability) {
+      params.set("availability", availability);
+    }
+
+    if (rating) {
+      params.set("rating", rating);
+    }
+
+    params.set("sort", sort);
+    params.set("page", String(currentPage));
+    params.set("limit", "8");
+
+    async function loadProducts() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await getProducts(params);
+
+        setProducts(response.products);
+        setTotalPages(response.pagination.totalPages);
+        setTotalProducts(response.pagination.total);
+      } catch {
+        setProducts([]);
+        setTotalPages(1);
+        setTotalProducts(0);
+        setError("Unable to load products.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProducts();
+  }, [searchQuery, selectedFilters, sort, currentPage]);
 
   const toggleFilter = (groupId: string, value: string) => {
     setCurrentPage(1);
@@ -62,76 +123,6 @@ export function ProductListing() {
     setSelectedFilters({});
   };
 
-  const filteredProducts = useMemo(() => {
-    const searchResults = searchProducts(products, searchQuery);
-
-    return searchResults.filter((product) => {
-      const brandFilters = selectedFilters.brand ?? [];
-      const categoryFilters = selectedFilters.category ?? [];
-      const availabilityFilters = selectedFilters.availability ?? [];
-      const ratingFilters = selectedFilters.rating ?? [];
-
-      const matchesBrand =
-        brandFilters.length === 0 ||
-        brandFilters.includes(product.brand.toLowerCase());
-
-      const matchesCategory =
-        categoryFilters.length === 0 ||
-        categoryFilters.includes(product.category);
-
-      const matchesAvailability =
-        availabilityFilters.length === 0 ||
-        availabilityFilters.some((filter) => {
-          if (filter === "in-stock") {
-            return product.inStock;
-          }
-
-          if (filter === "out-of-stock") {
-            return !product.inStock;
-          }
-
-          return true;
-        });
-
-      const matchesRating =
-        ratingFilters.length === 0 ||
-        ratingFilters.some((filter) => product.rating >= Number(filter));
-
-      return (
-        matchesBrand && matchesCategory && matchesAvailability && matchesRating
-      );
-    });
-  }, [searchQuery, selectedFilters]);
-
-  const sortedProducts = useMemo(() => {
-    return [...filteredProducts].sort((a, b) => {
-      switch (sort) {
-        case "price-low":
-          return a.price - b.price;
-
-        case "price-high":
-          return b.price - a.price;
-
-        case "rating":
-          return b.rating - a.rating;
-
-        case "featured":
-        default:
-          return 0;
-      }
-    });
-  }, [filteredProducts, sort]);
-
-  const totalPages = Math.ceil(sortedProducts.length / PRODUCTS_PER_PAGE);
-
-  const paginatedProducts = sortedProducts.slice(
-    (currentPage - 1) * PRODUCTS_PER_PAGE,
-    currentPage * PRODUCTS_PER_PAGE,
-  );
-
-  const hasSearchResults =
-    searchQuery.length > 0 && filteredProducts.length === 0;
-
   const handleSortChange = (value: ProductSort) => {
     setCurrentPage(1);
     setSort(value);
@@ -148,11 +139,14 @@ export function ProductListing() {
     setSelectedFilters((current) => {
       const currentValues = current[groupId] ?? [];
 
-      const nextValues = currentValues.filter((item) => item !== value);
+      const nextValues = currentValues.filter(
+        (item) => item !== value,
+      );
 
       if (nextValues.length === 0) {
         const next = { ...current };
         delete next[groupId];
+
         return next;
       }
 
@@ -163,12 +157,17 @@ export function ProductListing() {
     });
   };
 
+  const hasSearchResults =
+    searchQuery.length > 0 &&
+    !loading &&
+    products.length === 0;
+
   return (
     <>
       <ProductListingHeader
         title="All Products"
         description="Explore our collection of PC components, peripherals, and technology products."
-        productCount={filteredProducts.length}
+        productCount={totalProducts}
         sort={sort}
         onSortChange={handleSortChange}
       />
@@ -198,7 +197,25 @@ export function ProductListing() {
         />
 
         <div className="min-w-0 flex-1">
-          {hasSearchResults ? (
+          {loading ? (
+            <div className="flex min-h-80 items-center justify-center rounded-lg border border-(--border) bg-(--surface)">
+              <p className="text-sm text-(--foreground-muted)">
+                Loading products...
+              </p>
+            </div>
+          ) : error ? (
+            <div className="flex min-h-80 items-center justify-center rounded-lg border border-(--border) bg-(--surface) px-6 text-center">
+              <div>
+                <h2 className="text-lg font-semibold text-(--foreground)">
+                  Something went wrong
+                </h2>
+
+                <p className="mt-2 text-sm text-(--foreground-muted)">
+                  {error}
+                </p>
+              </div>
+            </div>
+          ) : hasSearchResults ? (
             <div className="flex min-h-80 flex-col items-center justify-center rounded-lg border border-(--border) bg-(--surface) px-6 text-center">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-(--background)">
                 <Search className="h-5 w-5 text-(--foreground-muted)" />
@@ -224,14 +241,16 @@ export function ProductListing() {
               </Link>
             </div>
           ) : (
-            <ProductGrid products={paginatedProducts} />
+            <ProductGrid products={products} />
           )}
 
-          <ProductPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
+          {!loading && !error && products.length > 0 && (
+            <ProductPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
         </div>
       </div>
 

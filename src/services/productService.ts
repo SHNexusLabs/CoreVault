@@ -9,6 +9,7 @@ export interface ProductQuery {
   minPrice?: number;
   maxPrice?: number;
   rating?: number;
+  sort?: "featured" | "price-low" | "price-high" | "rating";
   page?: number;
   limit?: number;
 }
@@ -43,6 +44,7 @@ export const productService = {
       minPrice,
       maxPrice,
       rating,
+      sort = "featured",
       page = 1,
       limit = 8,
     } = query;
@@ -85,6 +87,25 @@ export const productService = {
 
     if (rating !== undefined) {
       results = results.filter((product) => product.rating >= rating);
+    }
+
+    if (sort) {
+      results = [...results].sort((a, b) => {
+        switch (sort) {
+          case "price-low":
+            return a.price - b.price;
+
+          case "price-high":
+            return b.price - a.price;
+
+          case "rating":
+            return b.rating - a.rating;
+
+          case "featured":
+          default:
+            return 0;
+        }
+      });
     }
 
     const total = results.length;

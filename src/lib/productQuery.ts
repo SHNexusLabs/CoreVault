@@ -47,51 +47,44 @@ export function parseAvailability(
   return undefined;
 }
 
-export function parseOptionalString(
-  value: string | null,
-): string | undefined {
+export function parseOptionalString(value: string | null): string | undefined {
   const normalized = value?.trim().toLowerCase();
 
   return normalized || undefined;
 }
 
+export type ProductSort = "featured" | "price-low" | "price-high" | "rating";
+
+export function parseProductSort(value: string | null): ProductSort {
+  if (value === "price-low" || value === "price-high" || value === "rating") {
+    return value;
+  }
+
+  return "featured";
+}
+
 import type { ProductQuery } from "@/services/productService";
 
-export function parseProductQuery(
-  searchParams: URLSearchParams,
-): ProductQuery {
-  const minPrice = parsePositiveNumber(
-    searchParams.get("minPrice"),
-  );
+export function parseProductQuery(searchParams: URLSearchParams): ProductQuery {
+  const minPrice = parsePositiveNumber(searchParams.get("minPrice"));
 
-  const maxPrice = parsePositiveNumber(
-    searchParams.get("maxPrice"),
-  );
+  const maxPrice = parsePositiveNumber(searchParams.get("maxPrice"));
 
-  const rating = parsePositiveNumber(
-    searchParams.get("rating"),
-  );
+  const rating = parsePositiveNumber(searchParams.get("rating"));
 
-  const page = parsePositiveInteger(
-    searchParams.get("page"),
-    1,
-  );
+  const page = parsePositiveInteger(searchParams.get("page"), 1);
 
   const limit = Math.min(
     50,
-    parsePositiveInteger(
-      searchParams.get("limit"),
-      8,
-    ),
+    parsePositiveInteger(searchParams.get("limit"), 8),
   );
 
   return {
     search: parseOptionalString(searchParams.get("search")),
     category: parseOptionalString(searchParams.get("category")),
     brand: parseOptionalString(searchParams.get("brand")),
-    availability: parseAvailability(
-      searchParams.get("availability"),
-    ),
+    sort: parseProductSort(searchParams.get("sort")),
+    availability: parseAvailability(searchParams.get("availability")),
     minPrice,
     maxPrice,
     rating,
