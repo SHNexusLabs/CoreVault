@@ -7,18 +7,18 @@ import { Check, ShoppingCart } from "lucide-react";
 
 import { useCartStore } from "@/store/cart";
 import { useOrderStore } from "@/store/orders";
-import type { ShippingDetails } from "@/types/order";
+import type {
+  DeliveryMethod,
+  PaymentMethod,
+  ShippingDetails,
+} from "@/types/order";
+import { createOrder } from "@/lib/api/orders";
 
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
-import {
-  DeliveryOptions,
-  type DeliveryMethod,
-} from "@/components/checkout/DeliveryOptions";
-import {
-  PaymentOptions,
-  type PaymentMethod,
-} from "@/components/checkout/PaymentOptions";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
+
+import { DeliveryOptions } from "@/components/checkout/DeliveryOptions";
+import { PaymentOptions } from "@/components/checkout/PaymentOptions";
 
 type CheckoutStep = "shipping" | "delivery" | "payment";
 
@@ -50,7 +50,7 @@ export default function Checkout() {
 
   const total = subtotal + shippingCost;
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (isPlacingOrder) {
       return;
     }
@@ -60,24 +60,27 @@ export default function Checkout() {
       return;
     }
 
-    setIsPlacingOrder(true);
+    try {
+      setIsPlacingOrder(true);
 
-    const order = {
-      id: `CV-${Date.now()}`,
-      items,
-      shipping: shippingDetails,
-      deliveryMethod,
-      paymentMethod,
-      subtotal,
-      shippingCost,
-      total,
-      createdAt: new Date().toISOString(),
-    };
+      const response = await createOrder({
+        items: items.map((item) => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+        })),
+        shipping: shippingDetails,
+        deliveryMethod,
+        paymentMethod,
+      });
 
-    addOrder(order);
-    clearCart();
+      addOrder(response.order);
+      clearCart();
 
-    router.push(`/order-confirmation/${order.id}`);
+      router.push(`/order-confirmation/${response.order.id}`);
+    } catch (error) {
+      console.error("Failed to place order:", error);
+      setIsPlacingOrder(false);
+    }
   };
 
   if (items.length === 0) {

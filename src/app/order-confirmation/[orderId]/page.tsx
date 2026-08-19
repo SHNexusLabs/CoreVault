@@ -4,16 +4,56 @@ import Link from "next/link";
 import { CheckCircle2, Package } from "lucide-react";
 import { useParams } from "next/navigation";
 
-import { useOrderStore } from "@/store/orders";
+import { useEffect, useState } from "react";
+
+import type { Order } from "@/types/order";
+import { getOrder } from "@/lib/api/orders";
 
 export default function OrderConfirmation() {
   const params = useParams<{ orderId: string }>();
 
-  const order = useOrderStore((state) =>
-    state.orders.find((item) => item.id === params.orderId),
-  );
+  const [order, setOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  if (!order) {
+  useEffect(() => {
+    async function loadOrder() {
+      try {
+        setLoading(true);
+        setError(false);
+
+        const response = await getOrder(params.orderId);
+
+        setOrder(response.order);
+      } catch {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadOrder();
+  }, [params.orderId]);
+
+  if (loading) {
+    return (
+      <main className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="rounded-lg border border-(--border) bg-(--background) p-8 text-center">
+          <Package className="mx-auto h-10 w-10 text-(--foreground-muted)" />
+
+          <h1 className="mt-5 text-xl font-semibold text-(--foreground)">
+            Loading Order
+          </h1>
+
+          <p className="mt-2 text-sm text-(--foreground-muted)">
+            Please wait while we retrieve your order.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
+  if (error || !order) {
     return (
       <main className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="rounded-lg border border-(--border) bg-(--background) p-8 text-center">
@@ -24,7 +64,7 @@ export default function OrderConfirmation() {
           </h1>
 
           <p className="mt-2 text-sm text-(--foreground-muted)">
-            We couldn&apos;t find this order in your current session.
+            We couldn&apos;t find this order.
           </p>
 
           <Link
