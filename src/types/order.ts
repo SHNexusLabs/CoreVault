@@ -28,3 +28,13 @@ export interface Order {
 
   createdAt: string;
 }
+
+export interface Address {
+  id: string;
+  fullName: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  pinCode: string;
+}
