@@ -61,14 +61,11 @@ export default function OrderDetailPage() {
 
             <p className="mt-1 text-sm text-(--foreground-muted)">
               Placed on{" "}
-              {new Date(order.createdAt).toLocaleDateString(
-                "en-IN",
-                {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                },
-              )}
+              {new Date(order.createdAt).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
             </p>
           </div>
 
@@ -110,9 +107,9 @@ export default function OrderDetailPage() {
 
                   <p className="shrink-0 text-sm font-semibold text-(--foreground)">
                     ₹
-                    {(
-                      item.product.price * item.quantity
-                    ).toLocaleString("en-IN")}
+                    {(item.product.price * item.quantity).toLocaleString(
+                      "en-IN",
+                    )}
                   </p>
                 </div>
               ))}
@@ -127,9 +124,7 @@ export default function OrderDetailPage() {
 
             <div className="mt-5 space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-(--foreground-muted)">
-                  Subtotal
-                </span>
+                <span className="text-(--foreground-muted)">Subtotal</span>
 
                 <span className="font-medium text-(--foreground)">
                   ₹{order.subtotal.toLocaleString("en-IN")}
@@ -137,9 +132,7 @@ export default function OrderDetailPage() {
               </div>
 
               <div className="flex justify-between">
-                <span className="text-(--foreground-muted)">
-                  Shipping
-                </span>
+                <span className="text-(--foreground-muted)">Shipping</span>
 
                 <span className="font-medium text-(--foreground)">
                   {order.shippingCost === 0
@@ -149,9 +142,7 @@ export default function OrderDetailPage() {
               </div>
 
               <div className="flex justify-between border-t border-(--border) pt-4">
-                <span className="font-semibold text-(--foreground)">
-                  Total
-                </span>
+                <span className="font-semibold text-(--foreground)">Total</span>
 
                 <span className="text-lg font-bold text-(--foreground)">
                   ₹{order.total.toLocaleString("en-IN")}
@@ -172,9 +163,7 @@ export default function OrderDetailPage() {
                     : "Credit / Debit Card"}
               </p>
 
-              <p className="mt-4 text-xs text-(--foreground-muted)">
-                Delivery
-              </p>
+              <p className="mt-4 text-xs text-(--foreground-muted)">Delivery</p>
 
               <p className="mt-1 text-sm font-medium text-(--foreground)">
                 {order.deliveryMethod === "express"
